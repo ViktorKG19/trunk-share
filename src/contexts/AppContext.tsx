@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { TrunkRoute, Shipment, Review, ChatMessage, ShipmentStatus } from '@/lib/types';
-import { DEMO_ROUTES, DEMO_REVIEWS } from '@/lib/constants';
+import { TrunkRoute, Shipment, Review, ChatMessage, ShipmentStatus, User } from '@/lib/types';
+import { DEMO_ROUTES, DEMO_REVIEWS, DEMO_USERS } from '@/lib/constants';
 import { useAuth } from './AuthContext';
 
 export type Tab = 'send' | 'publish' | 'status' | 'profile';
@@ -16,6 +16,7 @@ interface AppContextType {
   routes: TrunkRoute[];
   shipments: Shipment[];
   reviews: Review[];
+  demoUsers: User[];
   activeTab: Tab;
   setActiveTab: (tab: Tab) => void;
   chatState: ChatState;
@@ -34,6 +35,7 @@ interface AppContextType {
   getRoute: (routeId: string) => TrunkRoute | undefined;
   getShipment: (shipmentId: string) => Shipment | undefined;
   openUserProfile: (userId: string) => void;
+  getDemoUser: (userId: string) => User | undefined;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -52,6 +54,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [activeTab, setActiveTab] = useState<Tab>('send');
   const [chatState, setChatState] = useState<ChatState>({ isOpen: false, mode: 'route' });
   const [profileUserId, setProfileUserId] = useState<string | null>(null);
+  const demoUsers = DEMO_USERS;
 
   const addRoute = (routeData: Omit<TrunkRoute, 'id' | 'driverId' | 'driverName'>) => {
     if (!user) return;
@@ -65,7 +68,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const searchRoutes = (from: string, date: string): TrunkRoute[] => {
-    return routes.filter(r => r.from === from && r.date === date && r.driverId !== user?.id);
+    return routes.filter(r => r.from === from && r.date === date && r.driverId !== user?.id && r.availableSlots > 0);
   };
 
   const openRouteChat = (routeId: string) => {
@@ -83,7 +86,13 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const createShipment = (routeId: string, messages: ChatMessage[]) => {
     if (!user) return;
     const route = routes.find(r => r.id === routeId);
-    if (!route) return;
+    if (!route || route.availableSlots <= 0) return;
+
+    // Decrement available slots
+    setRoutes(prev => prev.map(r =>
+      r.id === routeId ? { ...r, availableSlots: r.availableSlots - 1 } : r
+    ));
+
     const shipment: Shipment = {
       id: crypto.randomUUID(),
       routeId,
@@ -127,6 +136,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   const getRoute = (routeId: string) => routes.find(r => r.id === routeId);
   const getShipment = (shipmentId: string) => shipments.find(s => s.id === shipmentId);
+  const getDemoUser = (userId: string) => demoUsers.find(u => u.id === userId);
 
   const openUserProfile = (userId: string) => {
     setProfileUserId(userId);
@@ -134,11 +144,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AppContext.Provider value={{
-      routes, shipments, reviews, activeTab, setActiveTab, chatState,
+      routes, shipments, reviews, demoUsers, activeTab, setActiveTab, chatState,
       profileUserId, setProfileUserId,
       addRoute, searchRoutes, openRouteChat, openShipmentChat, closeChat,
       createShipment, updateShipmentStatus, addMessageToShipment,
-      addReview, markShipmentReviewed, getRoute, getShipment, openUserProfile,
+      addReview, markShipmentReviewed, getRoute, getShipment, openUserProfile, getDemoUser,
     }}>
       {children}
     </AppContext.Provider>

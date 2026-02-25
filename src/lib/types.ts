@@ -5,12 +5,18 @@ export interface User {
   age: number;
   city: string;
   bio: string;
+  avatar?: string;
+  verified?: boolean;
+  deliveryCount?: number;
+  avgResponseTime?: string;
 }
 
 export interface TrunkRoute {
   id: string;
   driverId: string;
   driverName: string;
+  driverAvatar?: string;
+  driverVerified?: boolean;
   from: string;
   to: string;
   date: string;
