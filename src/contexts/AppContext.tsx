@@ -3,7 +3,7 @@ import { TrunkRoute, Shipment, Review, ChatMessage, ShipmentStatus } from '@/lib
 import { DEMO_ROUTES, DEMO_REVIEWS } from '@/lib/constants';
 import { useAuth } from './AuthContext';
 
-export type Tab = 'send' | 'publish' | 'status' | 'reviews';
+export type Tab = 'send' | 'publish' | 'status' | 'profile';
 
 interface ChatState {
   isOpen: boolean;
@@ -19,8 +19,10 @@ interface AppContextType {
   activeTab: Tab;
   setActiveTab: (tab: Tab) => void;
   chatState: ChatState;
+  profileUserId: string | null;
+  setProfileUserId: (id: string | null) => void;
   addRoute: (route: Omit<TrunkRoute, 'id' | 'driverId' | 'driverName'>) => void;
-  searchRoutes: (from: string) => TrunkRoute[];
+  searchRoutes: (from: string, date: string) => TrunkRoute[];
   openRouteChat: (routeId: string) => void;
   openShipmentChat: (shipmentId: string) => void;
   closeChat: () => void;
@@ -31,6 +33,7 @@ interface AppContextType {
   markShipmentReviewed: (shipmentId: string) => void;
   getRoute: (routeId: string) => TrunkRoute | undefined;
   getShipment: (shipmentId: string) => Shipment | undefined;
+  openUserProfile: (userId: string) => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -48,6 +51,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [reviews, setReviews] = useState<Review[]>(DEMO_REVIEWS);
   const [activeTab, setActiveTab] = useState<Tab>('send');
   const [chatState, setChatState] = useState<ChatState>({ isOpen: false, mode: 'route' });
+  const [profileUserId, setProfileUserId] = useState<string | null>(null);
 
   const addRoute = (routeData: Omit<TrunkRoute, 'id' | 'driverId' | 'driverName'>) => {
     if (!user) return;
@@ -60,8 +64,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setRoutes(prev => [...prev, newRoute]);
   };
 
-  const searchRoutes = (from: string): TrunkRoute[] => {
-    return routes.filter(r => r.from === from && r.driverId !== user?.id);
+  const searchRoutes = (from: string, date: string): TrunkRoute[] => {
+    return routes.filter(r => r.from === from && r.date === date && r.driverId !== user?.id);
   };
 
   const openRouteChat = (routeId: string) => {
@@ -124,12 +128,17 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const getRoute = (routeId: string) => routes.find(r => r.id === routeId);
   const getShipment = (shipmentId: string) => shipments.find(s => s.id === shipmentId);
 
+  const openUserProfile = (userId: string) => {
+    setProfileUserId(userId);
+  };
+
   return (
     <AppContext.Provider value={{
       routes, shipments, reviews, activeTab, setActiveTab, chatState,
+      profileUserId, setProfileUserId,
       addRoute, searchRoutes, openRouteChat, openShipmentChat, closeChat,
       createShipment, updateShipmentStatus, addMessageToShipment,
-      addReview, markShipmentReviewed, getRoute, getShipment,
+      addReview, markShipmentReviewed, getRoute, getShipment, openUserProfile,
     }}>
       {children}
     </AppContext.Provider>

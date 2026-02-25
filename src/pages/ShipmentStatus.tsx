@@ -30,7 +30,7 @@ const STATUS_NEXT_LABELS: Partial<Record<Status, string>> = {
 };
 
 const ShipmentStatusPage = () => {
-  const { shipments, updateShipmentStatus, openShipmentChat, addReview, markShipmentReviewed } = useApp();
+  const { shipments, updateShipmentStatus, openShipmentChat, addReview, markShipmentReviewed, openUserProfile } = useApp();
   const { user } = useAuth();
   const [reviewDialog, setReviewDialog] = useState<string | null>(null);
   const [rating, setRating] = useState(5);
@@ -85,7 +85,7 @@ const ShipmentStatusPage = () => {
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">
-                Vozač: {shipment.driverName} • {shipment.date}
+                Vozač: <button onClick={() => openUserProfile(shipment.driverId)} className="text-primary hover:underline">{shipment.driverName}</button> • {shipment.date}
               </p>
               <div className="flex gap-2 flex-wrap">
                 <Button variant="outline" size="sm" onClick={() => openShipmentChat(shipment.id)}>
@@ -115,25 +115,13 @@ const ShipmentStatusPage = () => {
           <div className="space-y-4">
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map(n => (
-                <button
-                  key={n}
-                  onClick={() => setRating(n)}
-                  className={`text-2xl transition-colors ${n <= rating ? 'text-primary' : 'text-muted'}`}
-                >
+                <button key={n} onClick={() => setRating(n)} className={`text-2xl transition-colors ${n <= rating ? 'text-primary' : 'text-muted'}`}>
                   ★
                 </button>
               ))}
             </div>
-            <Textarea
-              placeholder="Vaš komentar..."
-              value={comment}
-              onChange={e => setComment(e.target.value)}
-            />
-            <Button
-              onClick={() => reviewDialog && handleReview(reviewDialog)}
-              className="w-full"
-              disabled={!comment.trim()}
-            >
+            <Textarea placeholder="Vaš komentar..." value={comment} onChange={e => setComment(e.target.value)} />
+            <Button onClick={() => reviewDialog && handleReview(reviewDialog)} className="w-full" disabled={!comment.trim()}>
               Pošalji recenziju
             </Button>
           </div>

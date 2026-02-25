@@ -2,6 +2,9 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  age: number;
+  city: string;
+  bio: string;
 }
 
 export interface TrunkRoute {

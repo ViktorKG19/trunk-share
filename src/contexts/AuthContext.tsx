@@ -4,8 +4,9 @@ import { User } from '@/lib/types';
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => boolean;
-  register: (name: string, email: string, password: string) => boolean;
+  register: (name: string, email: string, password: string, age: number, city: string) => boolean;
   logout: () => void;
+  updateProfile: (data: { name: string; age: number; city: string; bio: string }) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -46,10 +47,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return false;
   };
 
-  const register = (name: string, email: string, password: string): boolean => {
+  const register = (name: string, email: string, password: string, age: number, city: string): boolean => {
     const users = getUsers();
     if (users.find(u => u.email === email)) return false;
-    const newUser: StoredUser = { id: crypto.randomUUID(), name, email, password };
+    const newUser: StoredUser = { id: crypto.randomUUID(), name, email, password, age, city, bio: '' };
     users.push(newUser);
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
     const { password: _, ...userData } = newUser;
@@ -58,13 +59,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return true;
   };
 
+  const updateProfile = (data: { name: string; age: number; city: string; bio: string }) => {
+    if (!user) return;
+    const updated = { ...user, ...data };
+    setUser(updated);
+    localStorage.setItem(SESSION_KEY, JSON.stringify(updated));
+    const users = getUsers();
+    const idx = users.findIndex(u => u.id === user.id);
+    if (idx >= 0) {
+      users[idx] = { ...users[idx], ...data };
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    }
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem(SESSION_KEY);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );

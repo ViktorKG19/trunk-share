@@ -1,21 +1,27 @@
 import { useState } from 'react';
 import { Search, MapPin, Calendar, Package, User } from 'lucide-react';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { useApp } from '@/contexts/AppContext';
 import { SERBIAN_CITIES } from '@/lib/constants';
 import { TrunkRoute } from '@/lib/types';
 
 const SendPackage = () => {
-  const { searchRoutes, openRouteChat } = useApp();
+  const { searchRoutes, openRouteChat, openUserProfile } = useApp();
   const [from, setFrom] = useState('');
+  const [date, setDate] = useState<Date>();
   const [searched, setSearched] = useState(false);
   const [results, setResults] = useState<TrunkRoute[]>([]);
 
   const handleSearch = () => {
-    if (!from) return;
-    const found = searchRoutes(from);
+    if (!from || !date) return;
+    const dateStr = format(date, 'yyyy-MM-dd');
+    const found = searchRoutes(from, dateStr);
     setResults(found);
     setSearched(true);
   };
@@ -41,7 +47,19 @@ const SendPackage = () => {
           </SelectContent>
         </Select>
 
-        <Button onClick={handleSearch} className="w-full" disabled={!from}>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}>
+              <Calendar size={16} className="mr-2" />
+              {date ? format(date, 'dd.MM.yyyy') : 'Izaberite datum'}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <CalendarComponent mode="single" selected={date} onSelect={setDate} initialFocus className={cn("p-3 pointer-events-auto")} />
+          </PopoverContent>
+        </Popover>
+
+        <Button onClick={handleSearch} className="w-full" disabled={!from || !date}>
           <Search size={16} className="mr-2" />
           Pretraži
         </Button>
@@ -49,7 +67,7 @@ const SendPackage = () => {
 
       {searched && results.length === 0 && (
         <p className="text-center text-muted-foreground py-8">
-          Nema dostupnih ruta iz grada {from}.
+          Nema dostupnih ruta za izabrani grad i datum.
         </p>
       )}
 
@@ -65,7 +83,9 @@ const SendPackage = () => {
                   <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
                     <User size={16} className="text-primary" />
                   </div>
-                  <span className="font-medium">{route.driverName}</span>
+                  <button onClick={() => openUserProfile(route.driverId)} className="font-medium text-primary hover:underline">
+                    {route.driverName}
+                  </button>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <MapPin size={14} className="text-muted-foreground" />
@@ -81,11 +101,7 @@ const SendPackage = () => {
                     <span>{route.availableSlots} {route.availableSlots === 1 ? 'mesto' : 'mesta'}</span>
                   </div>
                 </div>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => openRouteChat(route.id)}
-                >
+                <Button variant="outline" className="w-full" onClick={() => openRouteChat(route.id)}>
                   Kontaktiraj vozača
                 </Button>
               </CardContent>
