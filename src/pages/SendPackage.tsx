@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, MapPin, Calendar, Package, User } from 'lucide-react';
+import { Search, MapPin, Calendar, Package, BadgeCheck } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useApp } from '@/contexts/AppContext';
 import { SERBIAN_CITIES } from '@/lib/constants';
 import { TrunkRoute } from '@/lib/types';
@@ -16,14 +17,21 @@ const SendPackage = () => {
   const [from, setFrom] = useState('');
   const [date, setDate] = useState<Date>();
   const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<TrunkRoute[]>([]);
 
   const handleSearch = () => {
     if (!from || !date) return;
-    const dateStr = format(date, 'yyyy-MM-dd');
-    const found = searchRoutes(from, dateStr);
-    setResults(found);
-    setSearched(true);
+    setLoading(true);
+    setSearched(false);
+    // Simulate loading for realism
+    setTimeout(() => {
+      const dateStr = format(date, 'yyyy-MM-dd');
+      const found = searchRoutes(from, dateStr);
+      setResults(found);
+      setSearched(true);
+      setLoading(false);
+    }, 800);
   };
 
   return (
@@ -65,48 +73,73 @@ const SendPackage = () => {
         </Button>
       </div>
 
-      {searched && results.length === 0 && (
-        <p className="text-center text-muted-foreground py-8">
+      {/* Loading skeleton */}
+      {loading && (
+        <div className="space-y-3 mt-2">
+          {[1, 2, 3].map(i => (
+            <Card key={i}>
+              <CardContent className="p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Skeleton className="w-10 h-10 rounded-full" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+                <Skeleton className="h-4 w-48" />
+                <Skeleton className="h-4 w-40" />
+                <Skeleton className="h-9 w-full" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {searched && !loading && results.length === 0 && (
+        <p className="text-center text-muted-foreground py-8 animate-fade-in">
           Nema dostupnih ruta za izabrani grad i datum.
         </p>
       )}
 
-      {results.length > 0 && (
-        <div className="space-y-3 mt-2">
+      {searched && !loading && results.length > 0 && (
+        <div className="space-y-3 mt-2 animate-fade-in">
           <p className="text-sm font-medium text-muted-foreground">
             Pronađeno ruta: {results.length}
           </p>
-          {results.map(route => (
-            <Card key={route.id}>
-              <CardContent className="p-4 space-y-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
-                    <User size={16} className="text-primary" />
+          {results.map((route, i) => {
+            const initials = route.driverName.split(' ').map(n => n[0]).join('').toUpperCase();
+            return (
+              <Card key={route.id} className="transition-all duration-300 hover:shadow-md" style={{ animationDelay: `${i * 80}ms` }}>
+                <CardContent className="p-4 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm shrink-0">
+                      {initials}
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <button onClick={() => openUserProfile(route.driverId)} className="font-medium text-primary hover:underline">
+                        {route.driverName}
+                      </button>
+                      {route.driverVerified && <BadgeCheck size={16} className="text-primary" />}
+                    </div>
                   </div>
-                  <button onClick={() => openUserProfile(route.driverId)} className="font-medium text-primary hover:underline">
-                    {route.driverName}
-                  </button>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <MapPin size={14} className="text-muted-foreground" />
-                  <span>{route.from} → {route.to}</span>
-                </div>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Calendar size={14} />
-                    <span>{route.date} u {route.time}</span>
+                  <div className="flex items-center gap-2 text-sm">
+                    <MapPin size={14} className="text-muted-foreground" />
+                    <span>{route.from} → {route.to}</span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Package size={14} />
-                    <span>{route.availableSlots} {route.availableSlots === 1 ? 'mesto' : 'mesta'}</span>
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <Calendar size={14} />
+                      <span>{route.date} u {route.time}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Package size={14} />
+                      <span>{route.availableSlots} {route.availableSlots === 1 ? 'mesto' : 'mesta'}</span>
+                    </div>
                   </div>
-                </div>
-                <Button variant="outline" className="w-full" onClick={() => openRouteChat(route.id)}>
-                  Kontaktiraj vozača
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+                  <Button variant="outline" className="w-full transition-all duration-200 hover:bg-primary hover:text-primary-foreground" onClick={() => openRouteChat(route.id)}>
+                    Kontaktiraj vozača
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>

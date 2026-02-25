@@ -51,16 +51,16 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 bg-background">
-      <div className="w-full max-w-sm">
-        <div className="flex flex-col items-center mb-8">
-          <img src={logo} alt="TrunkShare logo" className="h-28 mb-4" />
-          <h1 className="text-3xl font-bold text-foreground">TrunkShare</h1>
-          <p className="text-muted-foreground text-sm mt-1">
+      <div className="w-full max-w-sm animate-fade-in">
+        <div className="flex flex-col items-center mb-10">
+          <img src={logo} alt="TrunkShare logo" className="h-40 w-40 object-contain mb-5" />
+          <h1 className="text-4xl font-bold text-foreground tracking-tight">TrunkShare</h1>
+          <p className="text-muted-foreground text-sm mt-2 text-center">
             Pošaljite paket sa pouzdanim vozačem
           </p>
         </div>
 
-        <Card>
+        <Card className="shadow-lg">
           <CardHeader className="pb-4">
             <h2 className="text-lg font-semibold text-center">
               {isRegister ? 'Kreiraj nalog' : 'Prijavi se'}
@@ -103,7 +103,7 @@ const Auth = () => {
                   <Input id="confirm" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required placeholder="••••••••" />
                 </div>
               )}
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full text-base h-11">
                 {isRegister ? 'Kreiraj nalog' : 'Prijavi se'}
               </Button>
             </form>
