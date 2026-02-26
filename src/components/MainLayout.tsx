@@ -36,8 +36,8 @@ const MainLayout = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="flex items-center justify-between px-4 py-3 border-b border-border bg-background sticky top-0 z-10">
-        <div className="flex items-center">
-          <img src={logo} alt="TrunkShare" className="h-28" />
+        <div className="flex items-center -ml-2">
+          <img src={logo} alt="TrunkShare" className="h-[120px] object-contain" />
         </div>
         <div className="flex items-center gap-3">
           <span className="text-sm text-muted-foreground hidden sm:inline">{user?.name}</span>
