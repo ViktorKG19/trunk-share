@@ -61,24 +61,41 @@ export const DEMO_USERS: User[] = [
 ];
 
 export const DEMO_ROUTES: TrunkRoute[] = [
+  // Mart 1
   { id: 'demo-1', driverId: 'driver-1', driverName: 'Marko Petrović', driverVerified: true, from: 'Beograd', to: 'Novi Sad', date: '2026-03-01', time: '08:00', availableSlots: 3 },
-  { id: 'demo-2', driverId: 'driver-2', driverName: 'Ana Jovanović', driverVerified: true, from: 'Niš', to: 'Beograd', date: '2026-03-02', time: '10:30', availableSlots: 2 },
-  { id: 'demo-3', driverId: 'driver-3', driverName: 'Stefan Nikolić', driverVerified: true, from: 'Kragujevac', to: 'Čačak', date: '2026-03-03', time: '14:00', availableSlots: 1 },
-  { id: 'demo-4', driverId: 'driver-1', driverName: 'Marko Petrović', driverVerified: true, from: 'Novi Sad', to: 'Subotica', date: '2026-03-05', time: '09:00', availableSlots: 4 },
-  { id: 'demo-5', driverId: 'driver-4', driverName: 'Jelena Đorđević', from: 'Beograd', to: 'Niš', date: '2026-03-04', time: '07:00', availableSlots: 2 },
   { id: 'demo-6', driverId: 'driver-5', driverName: 'Nikola Stojanović', driverVerified: true, from: 'Subotica', to: 'Beograd', date: '2026-03-01', time: '06:30', availableSlots: 5 },
-  { id: 'demo-7', driverId: 'driver-6', driverName: 'Milica Ilić', driverVerified: true, from: 'Čačak', to: 'Beograd', date: '2026-03-02', time: '07:00', availableSlots: 2 },
-  { id: 'demo-8', driverId: 'driver-7', driverName: 'Đorđe Milanović', driverVerified: true, from: 'Kraljevo', to: 'Niš', date: '2026-03-03', time: '11:00', availableSlots: 3 },
-  { id: 'demo-9', driverId: 'driver-3', driverName: 'Stefan Nikolić', driverVerified: true, from: 'Beograd', to: 'Kragujevac', date: '2026-03-04', time: '09:30', availableSlots: 2 },
   { id: 'demo-10', driverId: 'driver-9', driverName: 'Aleksandar Pavlović', driverVerified: true, from: 'Valjevo', to: 'Beograd', date: '2026-03-01', time: '08:00', availableSlots: 3 },
-  { id: 'demo-11', driverId: 'driver-10', driverName: 'Tamara Milošević', driverVerified: true, from: 'Užice', to: 'Beograd', date: '2026-03-02', time: '06:00', availableSlots: 2 },
-  { id: 'demo-12', driverId: 'driver-8', driverName: 'Ivana Popović', from: 'Zrenjanin', to: 'Novi Sad', date: '2026-03-03', time: '15:00', availableSlots: 1 },
-  { id: 'demo-13', driverId: 'driver-5', driverName: 'Nikola Stojanović', driverVerified: true, from: 'Beograd', to: 'Subotica', date: '2026-03-05', time: '12:00', availableSlots: 3 },
   { id: 'demo-14', driverId: 'driver-7', driverName: 'Đorđe Milanović', driverVerified: true, from: 'Beograd', to: 'Kraljevo', date: '2026-03-01', time: '16:00', availableSlots: 2 },
-  { id: 'demo-15', driverId: 'driver-2', driverName: 'Ana Jovanović', driverVerified: true, from: 'Beograd', to: 'Niš', date: '2026-03-05', time: '08:30', availableSlots: 3 },
+  // Mart 2
+  { id: 'demo-2', driverId: 'driver-2', driverName: 'Ana Jovanović', driverVerified: true, from: 'Niš', to: 'Beograd', date: '2026-03-02', time: '10:30', availableSlots: 2 },
+  { id: 'demo-7', driverId: 'driver-6', driverName: 'Milica Ilić', driverVerified: true, from: 'Čačak', to: 'Beograd', date: '2026-03-02', time: '07:00', availableSlots: 2 },
+  { id: 'demo-11', driverId: 'driver-10', driverName: 'Tamara Milošević', driverVerified: true, from: 'Užice', to: 'Beograd', date: '2026-03-02', time: '06:00', availableSlots: 2 },
+  { id: 'demo-19', driverId: 'driver-1', driverName: 'Marko Petrović', driverVerified: true, from: 'Beograd', to: 'Zrenjanin', date: '2026-03-02', time: '09:00', availableSlots: 4 },
+  // Mart 3
+  { id: 'demo-3', driverId: 'driver-3', driverName: 'Stefan Nikolić', driverVerified: true, from: 'Kragujevac', to: 'Čačak', date: '2026-03-03', time: '14:00', availableSlots: 1 },
+  { id: 'demo-8', driverId: 'driver-7', driverName: 'Đorđe Milanović', driverVerified: true, from: 'Kraljevo', to: 'Niš', date: '2026-03-03', time: '11:00', availableSlots: 3 },
+  { id: 'demo-12', driverId: 'driver-8', driverName: 'Ivana Popović', from: 'Zrenjanin', to: 'Novi Sad', date: '2026-03-03', time: '15:00', availableSlots: 1 },
+  { id: 'demo-18', driverId: 'driver-4', driverName: 'Jelena Đorđević', from: 'Novi Sad', to: 'Beograd', date: '2026-03-03', time: '10:00', availableSlots: 3 },
+  { id: 'demo-20', driverId: 'driver-5', driverName: 'Nikola Stojanović', driverVerified: true, from: 'Beograd', to: 'Niš', date: '2026-03-03', time: '07:30', availableSlots: 4 },
+  // Mart 4
+  { id: 'demo-5', driverId: 'driver-4', driverName: 'Jelena Đorđević', from: 'Beograd', to: 'Niš', date: '2026-03-04', time: '07:00', availableSlots: 2 },
+  { id: 'demo-9', driverId: 'driver-3', driverName: 'Stefan Nikolić', driverVerified: true, from: 'Beograd', to: 'Kragujevac', date: '2026-03-04', time: '09:30', availableSlots: 2 },
   { id: 'demo-16', driverId: 'driver-6', driverName: 'Milica Ilić', driverVerified: true, from: 'Beograd', to: 'Čačak', date: '2026-03-04', time: '13:00', availableSlots: 2 },
   { id: 'demo-17', driverId: 'driver-1', driverName: 'Marko Petrović', driverVerified: true, from: 'Beograd', to: 'Novi Sad', date: '2026-03-04', time: '17:00', availableSlots: 2 },
-  { id: 'demo-18', driverId: 'driver-4', driverName: 'Jelena Đorđević', from: 'Novi Sad', to: 'Beograd', date: '2026-03-03', time: '10:00', availableSlots: 3 },
+  { id: 'demo-21', driverId: 'driver-9', driverName: 'Aleksandar Pavlović', driverVerified: true, from: 'Beograd', to: 'Valjevo', date: '2026-03-04', time: '11:00', availableSlots: 3 },
+  // Mart 5
+  { id: 'demo-4', driverId: 'driver-1', driverName: 'Marko Petrović', driverVerified: true, from: 'Novi Sad', to: 'Subotica', date: '2026-03-05', time: '09:00', availableSlots: 4 },
+  { id: 'demo-13', driverId: 'driver-5', driverName: 'Nikola Stojanović', driverVerified: true, from: 'Beograd', to: 'Subotica', date: '2026-03-05', time: '12:00', availableSlots: 3 },
+  { id: 'demo-15', driverId: 'driver-2', driverName: 'Ana Jovanović', driverVerified: true, from: 'Beograd', to: 'Niš', date: '2026-03-05', time: '08:30', availableSlots: 3 },
+  { id: 'demo-22', driverId: 'driver-10', driverName: 'Tamara Milošević', driverVerified: true, from: 'Beograd', to: 'Užice', date: '2026-03-05', time: '14:00', availableSlots: 2 },
+  { id: 'demo-23', driverId: 'driver-7', driverName: 'Đorđe Milanović', driverVerified: true, from: 'Niš', to: 'Kragujevac', date: '2026-03-05', time: '10:00', availableSlots: 3 },
+  // Mart 6-8 (dodatni)
+  { id: 'demo-24', driverId: 'driver-3', driverName: 'Stefan Nikolić', driverVerified: true, from: 'Beograd', to: 'Niš', date: '2026-03-06', time: '06:00', availableSlots: 3 },
+  { id: 'demo-25', driverId: 'driver-6', driverName: 'Milica Ilić', driverVerified: true, from: 'Čačak', to: 'Kraljevo', date: '2026-03-06', time: '09:00', availableSlots: 2 },
+  { id: 'demo-26', driverId: 'driver-8', driverName: 'Ivana Popović', from: 'Beograd', to: 'Zrenjanin', date: '2026-03-07', time: '08:00', availableSlots: 2 },
+  { id: 'demo-27', driverId: 'driver-2', driverName: 'Ana Jovanović', driverVerified: true, from: 'Beograd', to: 'Kragujevac', date: '2026-03-07', time: '11:30', availableSlots: 3 },
+  { id: 'demo-28', driverId: 'driver-1', driverName: 'Marko Petrović', driverVerified: true, from: 'Beograd', to: 'Novi Sad', date: '2026-03-08', time: '07:00', availableSlots: 5 },
+  { id: 'demo-29', driverId: 'driver-5', driverName: 'Nikola Stojanović', driverVerified: true, from: 'Subotica', to: 'Novi Sad', date: '2026-03-08', time: '15:00', availableSlots: 2 },
 ];
 
 export const DEMO_REVIEWS: Review[] = [
