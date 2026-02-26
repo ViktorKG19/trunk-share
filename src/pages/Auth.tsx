@@ -53,7 +53,7 @@ const Auth = () => {
     <div className="min-h-screen flex flex-col items-center justify-center px-4 bg-background">
       <div className="w-full max-w-sm animate-fade-in">
         <div className="flex flex-col items-center mb-10">
-          <img src={logo} alt="TrunkShare logo" className="h-40 w-40 object-contain mb-5" />
+          <img src={logo} alt="TrunkShare logo" className="w-[300px] h-auto object-contain mb-5" />
           <h1 className="text-4xl font-bold text-foreground tracking-tight">TrunkShare</h1>
           <p className="text-muted-foreground text-sm mt-2 text-center">
             Pošaljite paket sa pouzdanim vozačem

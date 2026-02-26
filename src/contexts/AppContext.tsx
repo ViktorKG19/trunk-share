@@ -51,6 +51,58 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [routes, setRoutes] = useState<TrunkRoute[]>(DEMO_ROUTES);
   const [shipments, setShipments] = useState<Shipment[]>([]);
   const [reviews, setReviews] = useState<Review[]>(DEMO_REVIEWS);
+  const [demoSeeded, setDemoSeeded] = useState(false);
+
+  // Seed demo shipments for the presentation account
+  React.useEffect(() => {
+    if (user && user.email === 'vbudimir920@gmail.com' && !demoSeeded) {
+      setDemoSeeded(true);
+      setShipments(prev => {
+        if (prev.some(s => s.id === 'demo-shipment-1' || s.id === 'demo-shipment-2')) return prev;
+        return [
+          ...prev,
+          // Shipment #1: user is sender, driver is Marko, status isporuceno
+          {
+            id: 'demo-shipment-1',
+            routeId: 'demo-1',
+            senderId: user.id,
+            senderName: user.name,
+            driverId: 'driver-1',
+            driverName: 'Marko Petrović',
+            from: 'Beograd',
+            to: 'Novi Sad',
+            date: '2026-02-25',
+            status: 'isporuceno' as const,
+            messages: [
+              { id: 'm1', senderId: user.id, senderName: user.name, text: 'Zdravo, imam paket za Novi Sad. Da li imate mesta?', timestamp: Date.now() - 86400000 },
+              { id: 'm2', senderId: 'driver-1', senderName: 'Marko Petrović', text: 'Zdravo! Naravno, imam mesta. Koji su dimenzije paketa?', timestamp: Date.now() - 85000000 },
+              { id: 'm3', senderId: user.id, senderName: user.name, text: 'Mala kutija, oko 30x20x15cm. Nije teška.', timestamp: Date.now() - 84000000 },
+              { id: 'm4', senderId: 'driver-1', senderName: 'Marko Petrović', text: 'Savršeno, to može bez problema. Rezervišite mesto!', timestamp: Date.now() - 83000000 },
+            ],
+          },
+          // Shipment #2: user is driver, sender is Ana, status u_toku
+          {
+            id: 'demo-shipment-2',
+            routeId: 'demo-5',
+            senderId: 'driver-2',
+            senderName: 'Ana Jovanović',
+            driverId: user.id,
+            driverName: user.name,
+            from: 'Beograd',
+            to: 'Niš',
+            date: '2026-02-26',
+            status: 'u_toku' as const,
+            messages: [
+              { id: 'm5', senderId: 'driver-2', senderName: 'Ana Jovanović', text: 'Zdravo! Videla sam da putujete za Niš. Imam paket za slanje.', timestamp: Date.now() - 50000000 },
+              { id: 'm6', senderId: user.id, senderName: user.name, text: 'Naravno, slobodno! Gde možemo da se nađemo?', timestamp: Date.now() - 49000000 },
+              { id: 'm7', senderId: 'driver-2', senderName: 'Ana Jovanović', text: 'Može kod Slavije u 7h ujutru?', timestamp: Date.now() - 48000000 },
+              { id: 'm8', senderId: user.id, senderName: user.name, text: 'Važi, vidimo se tamo!', timestamp: Date.now() - 47000000 },
+            ],
+          },
+        ];
+      });
+    }
+  }, [user, demoSeeded]);
   const [activeTab, setActiveTab] = useState<Tab>('send');
   const [chatState, setChatState] = useState<ChatState>({ isOpen: false, mode: 'route' });
   const [profileUserId, setProfileUserId] = useState<string | null>(null);
